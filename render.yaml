@@ -1,0 +1,20 @@
+# Render Blueprint — describes the site so Render configures itself from the repo.
+# Committing this means the deploy settings are version-controlled, not
+# clicked into a dashboard and forgotten.
+services:
+  - type: web
+    name: portfolio
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    # Static Sites are free, served from Render's CDN, and never spin down —
+    # unlike free Web Services, which sleep after 15 minutes idle.
+    routes:
+      # Send unknown paths to index.html so deep links don't 404.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable

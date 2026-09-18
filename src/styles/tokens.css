@@ -1,0 +1,35 @@
+/* Design tokens extracted from the original mockup.
+   Change a value here and it updates everywhere on the site. */
+:root {
+  /* Ink — text, darkest to lightest */
+  --ink:      #15161B;  /* headings, primary text */
+  --ink-2:    #33363C;  /* body copy */
+  --ink-3:    #585C63;  /* secondary / lede text */
+  --ink-4:    #8A8D93;  /* meta, captions, muted */
+
+  /* Surfaces */
+  --bg:       #FFFFFF;  /* page + card background */
+  --bg-alt:   #FAF9F0;  /* alternating section bands */
+
+  /* Lines */
+  --line:      #E9E5D6; /* solid borders, rules */
+  --line-dash: #DAD4BD; /* dashed placeholder frames */
+
+  /* Accent — the mockup offered four; this is the default.
+     Alternatives: #2B4EFF (blue) #1F6F5C (green) #B54A2A (rust) */
+  --accent: #15161B;
+
+  /* The faint gold grid behind the hero */
+  --grid-line: rgba(196, 164, 36, 0.14);
+
+  /* Type */
+  --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Layout */
+  --container:  1120px;
+  --gutter:     48px;
+  --gutter-sm:  24px;
+  --nav-height: 72px;
+}
