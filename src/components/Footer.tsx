@@ -10,9 +10,6 @@ export default function Footer() {
         <span className="mono" style={{ fontSize: 12.5, color: "var(--ink-4)" }}>
           © {new Date().getFullYear()} {site.name}
         </span>
-        <span className="mono" style={{ fontSize: 12.5, color: "var(--ink-4)" }}>
-          {site.footerNote}
-        </span>
       </div>
     </footer>
   );

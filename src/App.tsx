@@ -1,6 +1,7 @@
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
+import Projects from "./components/Projects";
 
 /**
  * The page shell. Sections get added here one at a time —
@@ -12,7 +13,8 @@ export default function App() {
       <Nav />
       <Hero />
       <main>
-        {/* Sections 01–05 land here next. */}
+        <Projects />
+        {/* About, Skills, Interests and Contact land here next. */}
       </main>
       <Footer />
     </>
