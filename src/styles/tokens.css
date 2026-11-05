@@ -19,13 +19,13 @@
      Alternatives: #2B4EFF (blue) #1F6F5C (green) #B54A2A (rust) */
   --accent: #15161B;
 
-  /* The faint gold grid behind the hero */
-  --grid-line: rgba(196, 164, 36, 0.14);
+  /* Hero background */
+  --hero-bg:   rgba(238, 232, 196, 0.45);  /* soft, low-saturation yellow, semi-transparent */
 
   /* Type */
-  --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+  --font-sans:    "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono:    "Segoe UI", system-ui, -apple-system, sans-serif;
 
   /* Layout */
   --container:  1120px;

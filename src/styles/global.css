@@ -104,15 +104,25 @@ section[id], header[id] { scroll-margin-top: 96px; }
   text-transform: uppercase;
 }
 
-/* Faint gold graph-paper grid behind the hero */
+/* Hero: a mild yellow wash instead of grid lines */
 .hero-grid {
-  background-image:
-    repeating-linear-gradient(0deg,  var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(90deg, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 20px);
+  background: var(--hero-bg);
 }
+
+/* Case-study card: generous padding on desktop, tighter on phones */
+.case-card { padding: 56px; }
+.case-card > * { min-width: 0; }
 
 @media (max-width: 860px) {
   .container { padding: 0 var(--gutter-sm); }
+  .case-card { padding: 24px; }
+  .case-card h3 { overflow-wrap: anywhere; }
+  .case-header { flex-wrap: wrap; }
+  .case-header .chip { white-space: normal; }
+  .hero-h1 { overflow-wrap: anywhere; }
+  /* Keep the architecture diagram's labels legible: scroll sideways instead of shrinking */
+  .diagram-scroll { overflow-x: auto; }
+  .arch-svg { min-width: 560px; }
   .grid-2 { grid-template-columns: 1fr !important; }
   .grid-3 { grid-template-columns: 1fr !important; }
   .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
@@ -128,3 +138,25 @@ section[id], header[id] { scroll-margin-top: 96px; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Case-study toggle: a quiet outlined button that fills on hover */
+.case-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+  padding: 14px 28px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, transform 150ms ease;
+}
+.case-toggle:hover { background: var(--ink); color: #FFFFFF; }
+.case-toggle:active { transform: translateY(1px); }
+.case-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

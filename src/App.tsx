@@ -1,4 +1,3 @@
-import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import Projects from "./components/Projects";
@@ -10,11 +9,9 @@ import Projects from "./components/Projects";
 export default function App() {
   return (
     <>
-      <Nav />
       <Hero />
       <main>
         <Projects />
-        {/* About, Skills, Interests and Contact land here next. */}
       </main>
       <Footer />
     </>

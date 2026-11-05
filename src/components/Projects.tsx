@@ -7,7 +7,6 @@ type Project = (typeof site.projects)[number];
 const body: CSSProperties = { fontSize: 15.5, lineHeight: 1.65, color: "var(--ink-2)", margin: 0 };
 const grid2: CSSProperties = { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "32px 48px" };
 const grid3: CSSProperties = { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px 48px" };
-const chipRow: CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8 };
 const svgMono: CSSProperties = { fontFamily: "var(--font-mono)" };
 
 /* A labelled block inside a case study, e.g. "PROBLEM" or "EVALUATION" */
@@ -33,9 +32,11 @@ function ArchitectureDiagram() {
     { x: 430, title: "GOOGLE CLOUD", lines: ["Translation (primary)", "Text-to-Speech (da-DK)"] },
   ];
   return (
+    <div className="diagram-scroll">
     <svg
       viewBox="0 0 640 350"
       role="img"
+      className="arch-svg"
       aria-label="Architecture: a mobile PWA calls a Flask server on Gunicorn over HTTPS, which uses PostgreSQL and the OpenAI and Google Cloud APIs"
       style={{ width: "100%", maxWidth: 680, display: "block", margin: "0 auto" }}
     >
@@ -94,6 +95,7 @@ function ArchitectureDiagram() {
         </g>
       ))}
     </svg>
+    </div>
   );
 }
 
@@ -122,17 +124,6 @@ function List({ items, ordered = false }: { items: readonly string[]; ordered?: 
   );
 }
 
-function Chips({ items }: { items: readonly string[] }) {
-  return (
-    <div style={chipRow}>
-      {items.map((item) => (
-        <div key={item} className="chip">
-          {item}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function CaseStudy({ project: p }: { project: Project }) {
   const [open, setOpen] = useState(false);
@@ -140,15 +131,15 @@ function CaseStudy({ project: p }: { project: Project }) {
   return (
     <article
       id={p.id}
+      className="case-card"
       style={{
         background: "var(--bg)",
-        border: "1px solid var(--line)",
-        padding: 56,
         marginBottom: 32,
       }}
     >
       {/* Header: title, one-line description, hero visual, quick facts, links */}
       <div
+        className="case-header"
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -158,8 +149,8 @@ function CaseStudy({ project: p }: { project: Project }) {
           marginBottom: 28,
         }}
       >
-        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
-          <span className="idx" style={{ fontSize: 15 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 16, minWidth: 0 }}>
+          <span className="idx" style={{ fontSize: 15, whiteSpace: "nowrap" }}>
             PROJECT / {p.index}
           </span>
           <span className="chip">{p.badge}</span>
@@ -170,78 +161,37 @@ function CaseStudy({ project: p }: { project: Project }) {
       </div>
 
       <h3 style={{ fontSize: 30, lineHeight: 1.2, marginBottom: 10 }}>{p.title}</h3>
-      <p className="mono" style={{ fontSize: 13, color: "var(--ink-4)", margin: 0 }}>
-        {p.description}
-      </p>
+
+      {/* Summary: 2-3 sentence overview, shown in the preview */}
+      <div style={{ background: "var(--bg-alt)", padding: 24, marginTop: 28 }}>
+        <Field label="SUMMARY">{p.summary}</Field>
+      </div>
 
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={`${p.id}-body`}
-        className="btn btn-outline"
-        style={{ width: "100%", marginTop: 28 }}
+        className="case-toggle"
+        style={{ marginTop: 28 }}
       >
-        {open ? "Hide case study ↑" : "Read case study ↓"}
+        {open ? "Hide case study" : "Read case study"}
       </button>
 
       {open && (
       <div id={`${p.id}-body`}>
-      {p.heroImage ? (
-        /* Portrait visual on the left, facts stacked on the right */
-        <div className="grid-2" style={{ ...grid2, gridTemplateColumns: "2fr 3fr", marginTop: 32, alignItems: "start" }}>
-          <img
-            src={p.heroImage}
-            alt={p.heroAlt}
-            style={{ width: "100%", display: "block", border: "1px solid var(--line)" }}
-          />
-          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-            {p.facts.role && <Field label="ROLE">{p.facts.role}</Field>}
-            <Field label="TIMELINE">{p.facts.timeline}</Field>
-            <Field label="TEAM">{p.facts.team}</Field>
-            <Chips items={p.facts.stack} />
-            {p.links.length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-                {p.links.map((link) => (
-                  <a key={link.label} href={link.href} className="mono" style={{ fontSize: 13, color: "var(--accent)" }}>
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="placeholder-frame" style={{ height: 320, marginTop: 32 }}>
-            {p.heroVisual}
-          </div>
-
-          <div className="grid-3" style={{ ...grid3, marginTop: 32 }}>
-            {p.facts.role && <Field label="ROLE">{p.facts.role}</Field>}
-            <Field label="TIMELINE">{p.facts.timeline}</Field>
-            <Field label="TEAM">{p.facts.team}</Field>
-          </div>
-          <div style={{ marginTop: 28 }}>
-            <Chips items={p.facts.stack} />
-          </div>
-          {p.links.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 24, marginTop: 24 }}>
-              {p.links.map((link) => (
-                <a key={link.label} href={link.href} className="mono" style={{ fontSize: 13, color: "var(--accent)" }}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
-        </>
+      {/* Design process comes first: the Double Diamond frames everything below */}
+      {p.researchImage && (
+        <Section title="Design process: double diamond methodology">
+          <figure style={{ margin: 0 }}>
+            <img
+              src={p.researchImage}
+              alt={p.researchAlt}
+              style={{ width: "100%", display: "block" }}
+            />
+          </figure>
+        </Section>
       )}
-
-      {/* TL;DR */}
-      <div style={{ background: "var(--bg-alt)", padding: 24, marginTop: 40 }}>
-        <Field label="TL;DR">{p.tldr}</Field>
-      </div>
-
       {/* Problem: who has it, why it matters, what was missing */}
       <Section title="PROBLEM">
         <div className="grid-3" style={grid3}>
@@ -253,18 +203,26 @@ function CaseStudy({ project: p }: { project: Project }) {
 
       {/* Research and insights */}
       <Section title="RESEARCH & INSIGHTS">
-        {p.researchImage && (
-          <img
-            src={p.researchImage}
-            alt={p.researchAlt}
-            style={{ width: "100%", display: "block", border: "1px solid var(--line)", marginBottom: 40 }}
-          />
-        )}
-        <div className="grid-2" style={grid2}>
-          <Field label="HOW I UNDERSTOOD USERS">{p.research.approach}</Field>
-          <Field label="KEY FINDINGS">
-            <List items={p.research.findings} />
-          </Field>
+        {/* Figure on the left, the research text beside it; stacks on phones */}
+        <div className="grid-2" style={{ ...grid2, gridTemplateColumns: "2fr 3fr", alignItems: "start" }}>
+          {p.modelImage && (
+            <figure style={{ margin: 0 }}>
+              <img
+                src={p.modelImage}
+                alt={p.modelAlt}
+                style={{ width: "100%", display: "block", border: "1px solid var(--line)" }}
+              />
+              <figcaption className="mono" style={{ fontSize: 13, color: "var(--ink-4)", marginTop: 12, lineHeight: 1.5 }}>
+                {p.modelCaption}
+              </figcaption>
+            </figure>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+            <Field label="HOW I UNDERSTOOD USERS">{p.research.approach}</Field>
+            <Field label="KEY FINDINGS">
+              <List items={p.research.findings} />
+            </Field>
+          </div>
         </div>
       </Section>
 
@@ -277,7 +235,7 @@ function CaseStudy({ project: p }: { project: Project }) {
           </Field>
         </div>
         {p.solution.screenshots.length > 0 && (
-          <div className="grid-2" style={{ ...grid2, marginTop: 32 }}>
+          <div style={{ marginTop: 32 }}>
             {p.solution.screenshots.map((shot) => (
               <div key={shot} className="placeholder-frame" style={{ height: 240 }}>
                 {shot}
@@ -287,21 +245,35 @@ function CaseStudy({ project: p }: { project: Project }) {
         )}
       </Section>
 
-      {/* How it works: architecture and key technical decisions */}
-      <Section title="HOW IT WORKS">
+      {/* The big figure: the dual-loop model, shown after the solution */}
+      {p.heroImage && (
+        <div style={{ marginTop: 48 }}>
+          <img
+            src={p.heroImage}
+            alt={p.heroAlt}
+            style={{ width: "100%", display: "block", border: "1px solid var(--line)" }}
+          />
+        </div>
+      )}
+      {(p.facts.role || p.links.length > 0) && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "baseline", marginTop: 32 }}>
+          {p.facts.role && <Field label="ROLE">{p.facts.role}</Field>}
+          {p.links.map((link) => (
+            <a key={link.label} href={link.href} download={"download" in link ? true : undefined} className="mono" style={{ fontSize: 13, color: "var(--accent)" }}>
+              {link.label}
+            </a>
+          ))}
+        </div>
+      )}
+
+      {/* Prototype: system architecture */}
+      <Section title="Prototype implementation">
         <div style={{ marginBottom: 32 }}>
           {p.architectureDiagram ? (
             <ArchitectureDiagram />
           ) : (
             <Field label="ARCHITECTURE">{p.how.architecture}</Field>
           )}
-        </div>
-        <div className="grid-2" style={grid2}>
-          {p.how.decisions.map((d) => (
-            <Field key={d.title} label={d.title.toUpperCase()}>
-              Trade-off: {d.tradeoff}
-            </Field>
-          ))}
         </div>
       </Section>
 
@@ -313,27 +285,19 @@ function CaseStudy({ project: p }: { project: Project }) {
             <List items={p.evaluation.results} />
           </Field>
         </div>
-        <div className="grid-2" style={{ ...grid2, marginTop: 32 }}>
-          <Field label="WHAT WORKED">{p.evaluation.worked}</Field>
-          <Field label="WHAT DIDN'T">{p.evaluation.didntWork}</Field>
+        <div style={{ marginTop: 32 }}>
+          <Field label="LIMITATIONS">{p.evaluation.limitations}</Field>
         </div>
       </Section>
 
-      {/* Reflection */}
-      <Section title="REFLECTION">
-        <div className="grid-3" style={grid3}>
-          <Field label="WHAT I LEARNED">{p.reflection.learned}</Field>
-          {p.reflection.differently && (
-            <Field label="WHAT I'D DO DIFFERENTLY">{p.reflection.differently}</Field>
-          )}
-          {p.reflection.next && <Field label="NEXT STEP">{p.reflection.next}</Field>}
-        </div>
-      </Section>
-
-      {/* Skills */}
-      <Section title="SKILLS">
-        <Chips items={p.skills} />
-      </Section>
+      <button
+        type="button"
+        onClick={() => setOpen(false)}
+        className="case-toggle"
+        style={{ marginTop: 48 }}
+      >
+        Hide case study
+      </button>
       </div>
       )}
     </article>
@@ -342,36 +306,13 @@ function CaseStudy({ project: p }: { project: Project }) {
 
 export default function Projects() {
   return (
-    <section id="projects" style={{ padding: "96px 0", borderBottom: "1px solid var(--line)" }}>
+    <section id="projects" style={{ padding: "48px 0 96px", borderBottom: "1px solid var(--line)" }}>
       <div className="container">
-        <div className="eyebrow" style={{ color: "var(--accent)", marginBottom: 20 }}>
-          Selected work
-        </div>
         <h2 style={{ fontSize: 44, lineHeight: 1.1, marginBottom: 48 }}>Case studies</h2>
 
         {site.projects.map((project) => (
           <CaseStudy key={project.id} project={project} />
         ))}
-
-        {/* Teaser for the next case study */}
-        <div
-          style={{
-            border: "1px dashed var(--line-dash)",
-            padding: "32px 56px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 12,
-          }}
-        >
-          <span className="idx" style={{ fontSize: 15 }}>
-            PROJECT / 03
-          </span>
-          <span className="mono" style={{ fontSize: 13.5, color: "var(--ink-4)" }}>
-            Next case study — in progress, check back soon
-          </span>
-        </div>
       </div>
     </section>
   );
